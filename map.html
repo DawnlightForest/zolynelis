@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Augalų Žemėlapis</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="map.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>Vaistinių Augalų Enciklopedija</h1>
+        <nav>
+            <a href="index.html">Augalų sąrašas</a>
+            <a href="map.html">Augalų žemėlapis</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Interaktyvus augintojų žemėlapis</h2>
+
+        <div class="filters">
+            <label for="plant-filter">Filtruoti pagal augalą:</label>
+            <select id="plant-filter">
+                <option value="0">- Rodyti visus augintojus -</option>
+            </select>
+        </div>
+        <div id="map-container"></div>
+
+        <div id="map-container"></div>
+    </main>
+</body>
+</html>
