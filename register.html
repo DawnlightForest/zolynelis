@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Augintojo registracija</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="register.js" defer></script>
+    <style> 
+        /* Laikinai */
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .message-box {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: none;
+            font-weight: bold;
+        }
+        .message-box.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message-box.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: #f5c6cb;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+  </head>
+    <body>
+
+        <header>
+            <h1>Vaistinių Augalų Enciklopedija</h1>
+        </header>
+
+        <main>
+            <div class="auth-container">
+                <h2>Augintojo Registracija</h2>
+                <div id="message" class="message-box"></div>
+
+                <form id="register-form">
+
+                    <div class="form-group">
+                        <label for="farm_name">Ūkio pavadinimas:</label>
+                        <input type="text" id="farm_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">El. paštas:</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Slaptažodis:</label>
+                        <input type="password" id="password" required>
+                    </div>
+
+                    <button type="submit">Registruotis</button>
+                    <p style="text-align: center; margin-top: 15px;">
+                        Jau turite paskyrą? <a href="login.html">Prisijungti</a>
+                    </p>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>
