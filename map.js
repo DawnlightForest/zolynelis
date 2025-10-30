@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // 3. Pridėsime nuorodą į pilną profilį vėliau (kitam žingsny)
                         // popupContent += `<br><a href="grower_profile.html?id=${grower.id}">Žiūrėti profilį...</a>`;
-                        
+                        popupContent += `<br><br><a href="grower_profile.html?id=${grower.id}" style="font-weight:bold;">Žiūrėti pilną profilį...</a>`;
                         // --- NAUJAS KODAS BAIGIASI ČIA ---
 
                         L.marker([lat, lon])
