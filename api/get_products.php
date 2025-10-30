@@ -5,7 +5,7 @@ session_start();
 header('Content-Type: application/json');
 
 // Patikrinimas, ar vartotojas prisijungęs ir yra augintojas
-if (!lisset($_SESSION['logged_in']) || $_SESSION['user_role'] !== 'grower') {
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_role'] !== 'grower') {
     http_response_code(403);
     echo json_encode(['error' => 'Prieiga uždrausta.']);
     exit;

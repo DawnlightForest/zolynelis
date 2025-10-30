@@ -49,12 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(growers => {
                 growers.forEach(grower => {
                     if (grower.latitude && grower.longitude) {
+                        
                         const lat = parseFloat(grower.latitude);
                         const lon = parseFloat(grower.longitude);
 
+                        // --- NAUJAS KODAS PRASIDEDA ČIA ---
+                        
+                        // Sukuriame turinį popup'ui
+                        let popupContent = '';
+
+                        // 1. Pridedame logotipą, jei jis yra
+                        if (grower.logo_url) {
+                            popupContent += `<img src="${grower.logo_url}" alt="${grower.farm_name}" style="width:100px; height:auto; display:block; margin-bottom:5px;">`;
+                        }
+
+                        // 2. Pridedame pavadinimą ir aprašymą
+                        popupContent += `<b>${grower.farm_name}</b><br>${grower.description}`;
+                        
+                        // 3. Pridėsime nuorodą į pilną profilį vėliau (kitam žingsny)
+                        // popupContent += `<br><a href="grower_profile.html?id=${grower.id}">Žiūrėti profilį...</a>`;
+                        
+                        // --- NAUJAS KODAS BAIGIASI ČIA ---
+
                         L.marker([lat, lon])
                             .addTo(markersLayer) // Dedame į sluoksnį
-                            .bindPopup(`<b>${grower.farm_name}</b><br>${grower.description}`);
+                            .bindPopup(popupContent); // Naudojame naują turinį
                     }
                 });
                 
