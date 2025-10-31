@@ -1,14 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+:root {
+    --primary-color: #4CAF50;    /* Pagrindinė spalva*/
+    --primary-dark: #388E3C;   /* Navigacijai */
+    --light-gray: #f4f4f4;     /* Fonas */
+    --dark-text: #333;         /* Pagrindinis tekstas */
+    --card-bg: #ffffff;         /* Kortelių fonas */
+    --border-color: #ddd;       /* Rėmelių spalva */
+}
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: 'Lato', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-text);
     line-height: 1.6;
     margin: 0;
     padding: 0;
 }
 header {
-    background: #4CAF50;
-    color: #fff;
+    background: var(--primary-color);
+    color: var(--card-bg);
     padding: 1rem;
     text-align: center;
 }
@@ -23,15 +32,15 @@ main {
     gap: 1rem;
 }
 .plant-card {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--dark-text)(0,0,0,0.1);
 }
 .plant-card h3 {
     margin-top: 0;
-    color: #4CAF50;
+    color: var(--primary-color);
 }
 .plant-card img {
     width: 100%;
@@ -42,20 +51,130 @@ main {
 #map-container {
     height: 500px;
     width: 100%;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     margin-top: 1rem;
 }
 header nav {
-    background-color: #388E3C;
+    background-color: var(--primary-dark);
     padding: 0.5rem;
 }
 header nav a:hover {
-    background-color: #2E7D32;
+    background-color: var(--primary-dark);
 }
 header nav a {
-    color: white; 
+    color: var(--card-bg); 
     padding: 0.5rem 1rem;
     text-decoration: none;
     font-weight: bold;
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box; /* Svarbu, kad padding neišstumtų elemento */
+}
+/* Bendras mygtuko stilius */
+button,
+.button {
+    background-color: var(--primary-color);
+    color: var(--card-bg);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: 'Lato', sans-serif;
+}
+button:hover,
+.button:hover {
+    opacity: 0.9;
+}
+/* Specifinis stilius pavojingiems mygtukams (Trinti) */
+button.danger {
+    background-color: #dc3545; /* Raudona */
+}
+/* Specifinis stilius antriniams mygtukams (Atšaukti) */
+button.secondary {
+    background-color: #aaa;
+}
+/* Visiems ekranams, kurie siauresni nei 768px */
+@media (max-width: 768px) {
+    
+    main {
+        width: 95%; /* Sumažiname paraštes */
+        margin: 1rem auto;
+    }
+
+    /* Augalų sąraše (index.html) rodome 1 kortelę per eilutę */
+    #plants-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* Prisijungimo/Registracijos formos */
+    .auth-container {
+        width: 90%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    /* Slėpti dideles antraštes, jei reikia */
+    h1 {
+        font-size: 1.8rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Lentelės portale ir admin panelėje */
+    table, thead, tbody, th, td, tr {
+        display: block; /* Paverčiame lentelę blokais */
+    }
+
+    table thead tr {
+        position: absolute; /* Paslepiame antraštes (bjaurus, bet greitas būdas) */
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table tr {
+        border: 1px solid var(--border-color);
+        margin-bottom: 10px;
+    }
+
+    table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%; /* Padarome vietos etiketei */
+        text-align: right;
+    }
+
+    table td:before {
+        /* Pridedame etiketes (paimtas iš thead) */
+        position: absolute;
+        left: 6px;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        text-align: left;
+    }
+    
+    /* Šią dalį reikės pritaikyti kiekvienai lentelei atskirai (sudėtinga) */
+    /* Tai yra pavyzdys, kurį reikės tobulinti */
 }
