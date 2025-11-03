@@ -262,11 +262,11 @@ function loadProductsList() {
                 products.forEach(product => {
                     html += `
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${product.name}</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${product.status}</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">
+                            <td data-label="Pavadinimas">${product.name}</td>
+                            <td data-label="Būsena">${product.status}</td>
+                            <td data-label="Veiksmai">
                                 <button onclick='showProductForm(${JSON.stringify(product)})'>Redaguoti</button>
-                                <button onclick="deleteProduct(${product.id})" style="background-color: #dc3545;">Trinti</button>
+                                <button onclick="deleteProduct(${product.id})" class="danger">Trinti</button>
                             </td>
                         </tr>
                     `;
@@ -335,7 +335,7 @@ function showProductForm(product = null) {
                     </div>
                 </fieldset>
                 <button type="submit">${isEditing ? 'Atnaujinti' : 'Išsaugoti'}</button>
-                <button type="button" id="cancel-product-form" style="background-color: #aaa; margin-left: 10px;">Atšaukti</button>
+                <button type="button" id="cancel-product-form" class="secondary" style="margin-left: 10px;">Atšaukti</button>
             </form>
             <p id="product-form-message" style="margin-top: 10px; font-weight: bold;"></p>
         </div>

@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     growers.forEach(grower => {
                         html += `
                             <tr id="grower-row-${grower.id}">
-                                <td style="padding: 8px; border: 1px solid #ddd;">${grower.farm_name}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">${grower.email}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">${grower.created_at}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">
+                                <td data-label="Ūkio pavadinimas">${grower.farm_name}</td>
+                                <td data-label="El. paštas">${grower.email}</td>
+                                <td data-label="Užsiregistravo">${grower.created_at}</td>
+                                <td data-label="Veiksmas">
                                     <button onclick="window.approveGrower(${grower.id})">Patvirtinti</button>
                                 </td>
                             </tr>
@@ -114,12 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     plants.forEach(plant => {
                         html += `
                             <tr id="plant-row-${plant.id}">
-                                <td style="padding: 8px; border: 1px solid #ddd;">${plant.id}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">${plant.name_lt}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">${plant.name_latin}</td>
-                                <td style="padding: 8px; border: 1px solid #ddd;">
+                                <td data-label="ID">${plant.id}</td>
+                                <td data-label="Lietuviškas pav.">${plant.name_lt}</td>
+                                <td data-label="Lotyniškas pav.">${plant.name_latin}</td>
+                                <td data-label="Veiksmai">
                                     <button onclick="window.showPlantForm(${plant.id})">Redaguoti</button>
-                                    <button onclick="window.deletePlant(${plant.id})" style="background-color: #dc3545;">Trinti</button>
+                                    <button onclick="window.deletePlant(${plant.id})" class="danger">Trinti</button>
                                 </td>
                             </tr>
                         `;
@@ -238,7 +238,7 @@ window.showPlantForm = async function(plantId) {
                 </div>
             
             <button type="submit">${plantId ? 'Atnaujinti' : 'Pridėti'}</button>
-            <button type="button" id="cancel-plant-form" style="background-color: #aaa; margin-left: 10px;">Atšaukti</button>
+            <button type="button" id="cancel-plant-form" class="secondary" style="margin-left: 10px;">Atšaukti</button>
         </form>
         <p id="plant-form-message" style="margin-top: 10px; font-weight: bold;"></p>
     `;

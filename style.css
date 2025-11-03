@@ -166,13 +166,14 @@ button.secondary {
     }
 
     table td:before {
-        /* Pridedame etiketes (paimtas iš thead) */
+        /* Pridedame etiketę iš data-label atributo */
+        content: attr(data-label); /* <-- SVARBIAUSIA DALIS */
         position: absolute;
         left: 6px;
         padding-right: 10px;
         white-space: nowrap;
         font-weight: bold;
-        text-align: left;
+        text-align: left; /* Etiketę lygiuojame kairėje */
     }
     
     /* Šią dalį reikės pritaikyti kiekvienai lentelei atskirai (sudėtinga) */
