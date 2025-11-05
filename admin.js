@@ -3,7 +3,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const pendingGrowersContainer = document.getElementById('pending-growers-container');
     const plantsAdminContainer = document.getElementById('plants-admin-container');
-    const logoutLink = document.getElementById('admin-logout-link');
 
     // 1. Patikriname, ar vartotojas tikrai yra administratorius
     fetch('api/check_auth.php')
@@ -20,14 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(() => {
             window.location.href = 'login.html';
         });
-
-    // 2. Atsijungimo funkcija
-    logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        fetch('api/logout.php').then(() => {
-            window.location.href = 'login.html';
-        });
-    });
 
     // 3. Funkcija gauti ir atvaizduoti laukiančius augintojus
     function loadPendingGrowers() {

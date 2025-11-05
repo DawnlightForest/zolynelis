@@ -2,8 +2,8 @@
 // Failas: api/product_links_api.php (ŠVARI VERSIJA)
 
 // Įjungiame klaidų rodymą
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
 
 require_once '../db_config.php';
 session_start();

@@ -6,7 +6,7 @@ session_start();
 session_unset();
 session_destroy();
 
-// Grąžiname sėkmės pranešimą (nors Frontend jo nelauks)
+// Grąžiname sėkmės pranešimą 
 header('Content-Type: application/json');
 echo json_encode(['success' => true]);
 ?>

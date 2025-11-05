@@ -8,7 +8,6 @@ let currentMarker = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const portalContent = document.getElementById('portal-content');
-    const logoutLink = document.getElementById('logout-link');
     let currentUserId = null;
 
     // 1. AUTENTIFIKACIJA
@@ -38,13 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             portalContent.innerHTML = '<p class="error">Klaida jungiantis prie sistemos.</p>';
         });
 
-    // 2. ATSIJUNGIMAS
-    logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        fetch('api/logout.php').then(() => {
-            window.location.href = 'login.html';
-        });
-    });
 });
 
 // =======================================================

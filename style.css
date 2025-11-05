@@ -58,15 +58,26 @@ main {
 header nav {
     background-color: var(--primary-dark);
     padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
-header nav a:hover {
-    background-color: var(--primary-dark);
-}
+
+/* Bendras VISŲ nuorodų stilius navigacijoje */
 header nav a {
-    color: var(--card-bg); 
+    color: white; 
     padding: 0.5rem 1rem;
     text-decoration: none;
     font-weight: bold;
+    border-radius: 4px;
+    margin: 5px;
+    transition: background-color 0.2s ease;
+}
+
+/* Bendra užvedimo būsena (paprastoms nuorodoms) */
+header nav a:hover {
+    background-color: #2E7D32; 
 }
 .form-group {
     margin-bottom: 1rem;
@@ -89,10 +100,11 @@ header nav a {
     box-sizing: border-box; /* Svarbu, kad padding neišstumtų elemento */
 }
 /* Bendras mygtuko stilius */
+/* Bendras mygtuko stilius (formoms ir pan.) */
 button,
 .button {
     background-color: var(--primary-color);
-    color: var(--card-bg);
+    color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
@@ -100,18 +112,73 @@ button,
     font-size: 1rem;
     font-weight: bold;
     font-family: 'Lato', sans-serif;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 button:hover,
 .button:hover {
     opacity: 0.9;
 }
+
 /* Specifinis stilius pavojingiems mygtukams (Trinti) */
 button.danger {
-    background-color: #dc3545; /* Raudona */
+    background-color: #dc3545; /* PATAISYTA: Raudona */
 }
+button.danger:hover {
+    background-color: #c9302c;
+}
+
 /* Specifinis stilius antriniams mygtukams (Atšaukti) */
 button.secondary {
     background-color: #aaa;
+}
+button.secondary:hover {
+    background-color: #888;
+}
+/* Bendras stilius naujiems mygtukams navigacijoje */
+.nav-button {
+    padding: 0.5rem 0.75rem; /* Pakeistas padding, kad būtų vienodesnis */
+    text-transform: uppercase; /* Padaro didžiąsias raides */
+    font-size: 0.9em;
+}
+
+/* Administratoriaus mygtukas (raudonas) */
+/* Papildomi stiliai spec. mygtukams navigacijoje */
+.nav-button {
+    padding: 0.5rem 0.75rem;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+/* Administratoriaus mygtukas (raudonas) */
+.nav-button.admin {
+    background-color: #d9534f; /* PATAISYTA: Raudona */
+}
+.nav-button.admin:hover {
+    background-color: #c9302c !important; 
+}
+
+/* Augintojo mygtukas (mėlynas) */
+.nav-button.grower {
+    background-color: #5bc0de; /* PATAISYTA: Žydra */
+}
+.nav-button.grower:hover {
+    background-color: #31b0d5 !important;
+}
+
+/* Atsijungimo mygtukas (pilkas) */
+.nav-button.logout {
+    background-color: #777; /* PATAISYTA: Pilka */
+}
+.nav-button.logout:hover {
+    background-color: #555 !important;
+}
+
+/* Prisijungimo mygtukas (žalias) */
+.nav-button.login {
+    background-color: var(--primary-dark);
+}
+.nav-button.login:hover {
+    background-color: #2E7D32 !important;
 }
 /* Visiems ekranams, kurie siauresni nei 768px */
 @media (max-width: 768px) {
