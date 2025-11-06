@@ -1,11 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 :root {
-    --primary-color: #4CAF50;    /* Pagrindinė spalva*/
-    --primary-dark: #388E3C;   /* Navigacijai */
-    --light-gray: #f4f4f4;     /* Fonas */
-    --dark-text: #333;         /* Pagrindinis tekstas */
-    --card-bg: #ffffff;         /* Kortelių fonas */
-    --border-color: #ddd;       /* Rėmelių spalva */
+    --primary-color: #4CAF50; /* Pagrindinė žalia */
+    --primary-dark: #388E3C;  /* Tamsi žalia (mygtukams) */
+    --light-gray: #f4f4f4;    /* Fonas */
+    --dark-text: #333;        /* Pagrindinis tekstas */
+    --card-bg: #ffffff;       /* Kortelių fonas */
+    --border-color: #ddd;     /* Rėmelių spalva */
+
+    /* --- PRIDĖKITE ŠIAS NAUJAS SPALVAS --- */
+    --warning-color: #D35400;  /* Švelni "deginta" oranžinė (Adminui) */
+    --info-color: #16A085;     /* Žalsvai melsva (Portalui) */
+    --secondary-color: #8D6E63; /* Švelni ruda/pilka (Atsijungti) */
 }
 body {
     font-family: 'Lato', Arial, sans-serif;
@@ -55,29 +60,85 @@ main {
     border-radius: 5px;
     margin-top: 1rem;
 }
-header nav {
-    background-color: var(--primary-dark);
+/* --- Header išdėstymas --- */
+header {
+    padding: 0; /* Nuimame seną padding */
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--primary-color); /* Antraštės fonas */
+}
+header h1 {
+    margin: 0;
+    font-size: 1.5rem; /* Šiek tiek mažesnis šriftas, kad tilptų */
+}
+
+/* --- Hamburger mygtukas (pagal nutylėjimą paslėptas) --- */
+#menu-toggle {
+    display: none; /* Dideliuose ekranuose nerodome */
+    background: none;
+    border: none;
+    cursor: pointer;
     padding: 0.5rem;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+}
+#menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+}
+
+/* --- Navigacijos nuorodos (dideliems ekranams) --- */
+#main-nav {
+    background-color: var(--primary-dark);
+}
+#nav-links {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    padding: 0.5rem;
+}
+/* 1. Navigacijos juosta (konteineris) */
+header nav {
+    background-color: rgba(0, 0, 0, 0.1); /* Šiek tiek patamsiname foną po mygtukais */
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px; /* Tarpai tarp mygtukų */
 }
 
-/* Bendras VISŲ nuorodų stilius navigacijoje */
+/* 2. Bendras VISŲ nuorodų stilius (Standartiniai žali mygtukai) */
 header nav a {
+    background-color: var(--primary-dark); /* Tamsiai žalia */
     color: white; 
-    padding: 0.5rem 1rem;
+    padding: 10px 15px;
     text-decoration: none;
     font-weight: bold;
-    border-radius: 4px;
-    margin: 5px;
-    transition: background-color 0.2s ease;
+    border-radius: 5px;      /* Apvalinti kampai */
+    transition: all 0.2s ease; /* Animacija */
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    border: none; /* Užtikriname, kad nebūtų rėmelių */
 }
 
-/* Bendra užvedimo būsena (paprastoms nuorodoms) */
+/* 3. Užvedimo efektas visiems mygtukams */
 header nav a:hover {
-    background-color: #2E7D32; 
+    transform: translateY(-2px); /* Mygtukas šiek tiek pakyla užvedus */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Atsiranda šešėlis */
+    opacity: 0.9;
 }
 .form-group {
     margin-bottom: 1rem;
@@ -136,49 +197,63 @@ button.secondary:hover {
 }
 /* Bendras stilius naujiems mygtukams navigacijoje */
 .nav-button {
-    padding: 0.5rem 0.75rem; /* Pakeistas padding, kad būtų vienodesnis */
-    text-transform: uppercase; /* Padaro didžiąsias raides */
-    font-size: 0.9em;
-}
-
-/* Administratoriaus mygtukas (raudonas) */
-/* Papildomi stiliai spec. mygtukams navigacijoje */
-.nav-button {
     padding: 0.5rem 0.75rem;
     text-transform: uppercase;
     font-size: 0.9em;
 }
 
-/* Administratoriaus mygtukas (raudonas) */
+/* Administratoriaus mygtukas (Oranžinis) */
 .nav-button.admin {
-    background-color: #d9534f; /* PATAISYTA: Raudona */
+    background-color: var(--warning-color); 
 }
 .nav-button.admin:hover {
-    background-color: #c9302c !important; 
+    background-color: #A64200 !important;
 }
 
-/* Augintojo mygtukas (mėlynas) */
+/* Augintojas - Žydra (Informacinė spalva) */
 .nav-button.grower {
-    background-color: #5bc0de; /* PATAISYTA: Žydra */
+    background-color: var(--info-color);
 }
 .nav-button.grower:hover {
-    background-color: #31b0d5 !important;
+    background-color: #117A65 !important;
 }
 
-/* Atsijungimo mygtukas (pilkas) */
+/* Atsijungti - Pilka/Ruda (Antrinė spalva) */
 .nav-button.logout {
-    background-color: #777; /* PATAISYTA: Pilka */
+    background-color: var(--secondary-color);
 }
 .nav-button.logout:hover {
-    background-color: #555 !important;
+    background-color: #6D4C41 !important;
 }
-
-/* Prisijungimo mygtukas (žalias) */
+/* Prisijungimo mygtukas (lieka standartinis tamsiai žalias) */
 .nav-button.login {
     background-color: var(--primary-dark);
 }
 .nav-button.login:hover {
-    background-color: #2E7D32 !important;
+    background-color: #4a9e4d !important;
+}
+.auth-container {
+    max-width: 400px; /* Nustatome maksimalų plotį, kad nebūtų per plati */
+    width: 90%;       /* Mobiliuosiuose užims 90% ekrano pločio */
+    margin: 50px auto; /* 'auto' centruoja elementą horizontaliai */
+    padding: 30px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Šiek tiek gražesnis šešėlis */
+}
+
+.auth-container h2 {
+    text-align: center; /* Centruojame antraštę "Prisijungimas" */
+    color: var(--primary-dark);
+    margin-top: 0;
+}
+
+/* Kad mygtukas "Prisijungti" būtų per visą plotį */
+#login-form button,
+#register-form button {
+    width: 100%;
+    margin-top: 10px;
 }
 /* Visiems ekranams, kurie siauresni nei 768px */
 @media (max-width: 768px) {
@@ -242,6 +317,44 @@ button.secondary:hover {
         font-weight: bold;
         text-align: left; /* Etiketę lygiuojame kairėje */
     }
+    /* --- MOBILIEMS ĮRENGINIAMS --- */
+@media (max-width: 768px) {
+    
+    /* Rodome Hamburger mygtuką */
+    #menu-toggle {
+        display: flex; 
+    }
+
+    /* Paslepiame navigacijos nuorodas pagal nutylėjimą */
+    #nav-links {
+        display: none; /* Paslėpta */
+        flex-direction: column; /* Išdėstome vertikaliai */
+        width: 100%;
+        text-align: center;
+        padding: 0;
+    }
+
+    /* Klasė, kurią JS pridės, kad parodytų meniu */
+    #nav-links.active {
+        display: flex;
+    }
+
+    /* Nuorodos mobiliame meniu užima visą plotį */
+    #nav-links a {
+        width: 100%;
+        margin: 0;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-radius: 0; /* Panaikiname apvalius kampus mobiliame */
+    }
+
+    /* Specifinių mygtukų (Admin, Logout) stilius mobiliame */
+    .nav-button {
+        margin: 0 !important; /* Užtikriname, kad nebūtų kairės paraštės */
+        width: 100%;
+        border-radius: 0;
+    }
+}
     
     /* Šią dalį reikės pritaikyti kiekvienai lentelei atskirai (sudėtinga) */
     /* Tai yra pavyzdys, kurį reikės tobulinti */
