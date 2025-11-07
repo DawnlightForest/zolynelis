@@ -1,21 +1,30 @@
-// Failas: global.js (GALUTINĖ VERSIJA: Hamburger + Autentifikacija)
+// Failas: global.js (PATAISYTA Meniu Rodyjimo Logika)
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Surandame naujus elementus (pritaikytus mobiliam dizainui)
-    const navLinksContainer = document.getElementById('nav-links');
+    
+    // 1. Surandame VISUS tris elementus
     const menuToggle = document.getElementById('menu-toggle');
+    const mainNav = document.getElementById('main-nav'); // <-- SVARBUS PATAISYMAS: Randame pagrindinį <nav>
+    const navLinksContainer = document.getElementById('nav-links');
 
-    // 2. Hamburger meniu valdymas (jei mygtukas egzistuoja puslapyje)
-    if (menuToggle && navLinksContainer) {
+    // 2. Hamburger meniu valdymas
+    if (menuToggle && mainNav) { // <-- Tikriname, ar radome mainNav
         menuToggle.addEventListener('click', () => {
-            // Perjungiame 'active' klasę, kurią CSS naudos rodymui/slėpimui
-            navLinksContainer.classList.toggle('active');
+            // Perjungiame 'active' klasę visam <nav id="main-nav"> blokui
+            mainNav.classList.toggle('active'); // <-- PATAISYTA
+            
+            // Taip pat perjungiame mygtukui (dėl "X" animacijos)
+            menuToggle.classList.toggle('active');
         });
     }
 
     // 3. Autentifikacija ir nuorodų pridėjimas
-    // Svarbu: tikriname, ar radome navLinksContainer, prieš dedant į jį nuorodas
-    if (!navLinksContainer) return;
+    
+    // Tikriname, ar radome vidinį nuorodų konteinerį
+    if (!navLinksContainer) {
+        console.error('Klaida: HTML struktūroje nerastas #nav-links konteineris.');
+        return; 
+    }
 
     fetch('api/check_auth.php')
         .then(response => response.json())
@@ -24,14 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // --- VARTOTOJAS PRISIJUNGĘS ---
                 
                 let panelLink = '';
-                // Nustatome tinkamą nuorodą pagal rolę
                 if (auth.role === 'admin') {
                     panelLink = '<a href="admin.html" class="nav-button admin">ADMINO PANELĖ</a>';
                 } else if (auth.role === 'grower') {
                     panelLink = '<a href="portal.html" class="nav-button grower">MANO PORTALAS</a>';
                 }
 
-                // Pridedame nuorodas į NAUJĄJĮ konteinerį (#nav-links)
+                // Dedame nuorodas į vidinį konteinerį
                 navLinksContainer.innerHTML += panelLink;
                 navLinksContainer.innerHTML += '<a href="#" id="global-logout-link" class="nav-button logout">Atsijungti</a>';
                 
@@ -40,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (logoutLink) {
                     logoutLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        // Sunaikiname sesiją serveryje
                         fetch('api/logout.php')
                             .then(response => response.json())
                             .then(() => window.location.href = 'index.html')
@@ -49,11 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 // --- VARTOTOJAS ATSIJUNGĘS ---
-                // Pridedame "Prisijungti" mygtuką
-                 navLinksContainer.innerHTML += '<a href="login.html" class="nav-button login">Prisijungti</a>';
+                navLinksContainer.innerHTML += '<a href="login.html" class="nav-button login">Prisijungti</a>';
             }
         })
-        .catch(error => {
-            console.error("Autentifikacijos klaida:", error);
-        });
+        .catch(error => console.error("Autentifikacijos klaida:", error));
 });

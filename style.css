@@ -66,34 +66,41 @@ header {
 }
 .header-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Elementai bus išdėstyti galuose */
     align-items: center;
     padding: 1rem;
     background: var(--primary-color); /* Antraštės fonas */
+    color: white; /* Tekstas baltas */
 }
 header h1 {
     margin: 0;
-    font-size: 1.5rem; /* Šiek tiek mažesnis šriftas, kad tilptų */
+    font-size: 1.5rem; /* Šiek tiek mažesnis šriftas mobiliems */
+    flex-grow: 1; /* Leidžia antraštei užimti kuo daugiau vietos */
+    text-align: left; /* Antraštė kairėje */
 }
 
 /* --- Hamburger mygtukas (pagal nutylėjimą paslėptas) --- */
 #menu-toggle {
-    display: none; /* Dideliuose ekranuose nerodome */
+    display: none; /* Pagal nutylėjimą paslėptas dideliuose ekranuose */
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.5rem;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
+    padding: 0; /* Nuimame paddingą, kad span elementai būtų tikslūs */
+    width: 30px; /* Mygtuko plotis */
+    height: 25px; /* Mygtuko aukštis */
+    position: relative; /* Kad galėtume pozicionuoti span */
+    flex-direction: column; /* Brūkšneliai vienas po kito */
+    justify-content: space-around; /* Tarpai tarp brūkšnelių */
+    z-index: 1001; /* Užtikriname, kad būtų viršuje */
 }
+
 #menu-toggle span {
+    display: block; /* Kad span užimtų visą liniją */
     width: 100%;
-    height: 3px;
-    background-color: white;
-    border-radius: 10px;
-    transition: all 0.3s linear;
+    height: 3px; /* Brūkšnelių aukštis */
+    background-color: white; /* Brūkšnelių spalva */
+    border-radius: 2px; /* Šiek tiek apvalinti kampai */
+    transition: all 0.3s ease-in-out; /* Animacija atidarant/uždarant meniu */
 }
 
 /* --- Navigacijos nuorodos (dideliems ekranams) --- */
@@ -319,40 +326,55 @@ button.secondary:hover {
     }
     /* --- MOBILIEMS ĮRENGINIAMS --- */
 @media (max-width: 768px) {
-    
-    /* Rodome Hamburger mygtuką */
+    /* ... Kiti responsyvūs stiliai ... */
+
+    /* Rodome Hamburger mygtuką mobiliuose */
     #menu-toggle {
         display: flex; 
     }
 
-    /* Paslepiame navigacijos nuorodas pagal nutylėjimą */
-    #nav-links {
-        display: none; /* Paslėpta */
-        flex-direction: column; /* Išdėstome vertikaliai */
+    /* Meniu paslėpimas/rodymas */
+    #main-nav {
+        display: none; /* Paslėpta pagal nutylėjimą mobiliuosiuose */
+        position: absolute; /* Leidžia meniu uždengti turinį */
+        top: 60px; /* Turi būti po header-content */
+        left: 0;
         width: 100%;
-        text-align: center;
+        background-color: var(--primary-dark);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+        flex-direction: column;
+    }
+    #main-nav.active {
+        display: flex; /* Rodyti, kai aktyvus */
+    }
+
+    #nav-links {
+        flex-direction: column;
+        width: 100%;
         padding: 0;
     }
-
-    /* Klasė, kurią JS pridės, kad parodytų meniu */
-    #nav-links.active {
-        display: flex;
-    }
-
-    /* Nuorodos mobiliame meniu užima visą plotį */
     #nav-links a {
         width: 100%;
         margin: 0;
         padding: 1rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
-        border-radius: 0; /* Panaikiname apvalius kampus mobiliame */
+        border-radius: 0;
+        text-align: left; /* Nuorodos teksto lygiavimas */
+    }
+    #nav-links a:last-child {
+        border-bottom: none; /* Paskutinė nuoroda be apatinio rėmelio */
     }
 
-    /* Specifinių mygtukų (Admin, Logout) stilius mobiliame */
-    .nav-button {
-        margin: 0 !important; /* Užtikriname, kad nebūtų kairės paraštės */
-        width: 100%;
-        border-radius: 0;
+    /* Meniu mygtuko animacija */
+    #menu-toggle.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    #menu-toggle.active span:nth-child(2) {
+        opacity: 0; /* Vidurinis brūkšnelis dingsta */
+    }
+    #menu-toggle.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
     }
 }
     
