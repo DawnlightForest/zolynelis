@@ -1,54 +1,81 @@
-// Laukia, kol HTML dokumentas bus pilnai įkeltas
+// Failas: app.js (ATNAUJINTAS SU PAIEŠKA)
+
+// Surandame konteinerį ir paieškos laukelį iš karto
+const container = document.getElementById('plants-container');
+const searchBar = document.getElementById('search-bar');
+
+// 1. FUNKCIJA, KURI ATVAIZDUOJA AUGALUS
+// Šią funkciją naudosime ir pradiniam užkrovimui, ir paieškai
+function renderPlants(plants) {
+    // Išvalome konteinerį
+    container.innerHTML = '';
+
+    if (plants.length === 0) {
+        container.innerHTML = '<p>Pagal jūsų paiešką augalų nerasta.</p>';
+        return;
+    }
+
+    plants.forEach(plant => {
+        const card = document.createElement('div');
+        card.className = 'plant-card';
+
+        const title = document.createElement('h3');
+        title.textContent = plant.name_lt;
+
+        const latinName = document.createElement('p');
+        latinName.textContent = `(${plant.name_latin})`;
+
+        const link = document.createElement('a');
+        link.textContent = 'Skaityti daugiau...';
+        link.href = `plant.html?id=${plant.id}`;
+
+        card.appendChild(title);
+        card.appendChild(latinName);
+        card.appendChild(link);
+        container.appendChild(card);
+    });
+}
+
+// 2. FUNKCIJA, KURI GAUNA AUGALUS IŠ API
+// Pagal nutylėjimą terminas yra tuščias (grąžins visus augalus)
+async function fetchPlants(searchTerm = '') {
+    // Nustatome, į kurį API kreiptis
+    let apiUrl = '';
+    if (searchTerm) {
+        // Naudojame naują API su paieškos terminu
+        apiUrl = `api/search_plants.php?term=${encodeURIComponent(searchTerm)}`;
+    } else {
+        // Naudojame seną API visiems augalams gauti
+        apiUrl = 'api/get_plants.php';
+    }
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Serverio atsakymas nebuvo sėkmingas');
+        }
+        const plants = await response.json();
+        
+        // Atvaizduojame gautus augalus
+        renderPlants(plants);
+
+    } catch (error) {
+        console.error('Klaida gaunant duomenis:', error);
+        container.innerHTML = '<p>Įvyko klaida kraunant augalus. Bandykite vėliau.</p>';
+    }
+}
+
+// 3. PALEIDIMAS
+
+// Kai puslapis užsikrauna, iš karto parodome VISUS augalus
 document.addEventListener('DOMContentLoaded', () => {
+    container.innerHTML = '<p>Kraunami augalai...</p>';
+    fetchPlants(); // Kviečiame be termino
 
-    // 1. Surandame HTML elementą, į kurį dėsime duomenis
-    const container = document.getElementById('plants-container');
-
-    //2. Kreipiamės į savo sukurtą API
-    fetch('api/get_plants.php')
-        .then(response => {
-            // Tikriname, ar serveris atsakė sėkmingai
-            if (!response.ok) {
-                throw new Error('Serverio atsakymas nebuvo sėkmingas');
-            }
-            // Konvertuojame JSON atsakymą į JavaScript objektą
-            return response.json();
-        })
-        .then(plants => {
-            // 3. Gavome duomenis 
-
-            // Išvalome pranešimą "Kraunami augalai..."
-            container.innerHTML = '';
-
-            // 4. Einame per kiekvieną augalą gautame masyve
-            plants.forEach(plant => {
-                // Kuriame HTML elementus kiekvienam augalui
-                const card = document.createElement('div');
-                card.className = 'plant-card'; // Pridedame klasę stiliui
-
-                const title = document.createElement('h3');
-                title.textContent = plant.name_lt; // Paimame pavadinimą API
-                
-                const latinName = document.createElement('p');
-                latinName.textContent = `(${plant.name_latin})`; // Paimame lotynišką pavadinimą
-                
-                // Sukureme nuorodą į detalų puslapį
-                const link = document.createElement('a');
-                link.textContent = 'Skaityti daugiau...';
-                link.href = `plant.html?id=${plant.id}`; // Pvz.: plant.html?id=1
-
-                // Dedame elementus į kortelę
-                card.appendChild(title);
-                card.appendChild(latinName);
-                card.appendChild(link);
-
-                // Dedame kortelę į pagrindinį konteinerį
-                container.appendChild(card);
-            });
-        })
-        .catch(error => {
-            // 5. Klaidos atveju
-            console.error('Klaida gaunant augalus:', error);
-            container.innerHTML = '<p>Įvyko klaida kraunant augalus. Bandykite vėliau.</p>';
-});
+    // Pridedame įvykio klausiklį paieškos laukeliui
+    searchBar.addEventListener('input', (e) => {
+        const term = e.target.value;
+        // Kviečiame tą pačią funkciją, bet jau su paieškos terminu
+        fetchPlants(term);
+    });
 });
