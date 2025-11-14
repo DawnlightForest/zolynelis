@@ -29,16 +29,50 @@
     </header>
 
     <main>
-        <a href="map.html" style="margin-bottom: 1rem; display: inline-block;">&larr; Atgal į žemėlapį</a>
-        
-        <div id="grower-profile-container">
-            <p>Kraunama augintojo informacija...</p>
-        </div>
+    <a href="map.html" style="margin-bottom: 1rem; display: inline-block;">&larr; Atgal į žemėlapį</a>
+    
+    <div id="grower-profile-container">
+        <p>Kraunama augintojo informacija...</p>
+    </div>
 
-        <h2 style="margin-top: 2rem;">Siūloma Produkcija</h2>
-        <div id="grower-products-container">
-            <p>Kraunamas produktų sąrašas...</p>
-        </div>
+    <h2 style="margin-top: 2rem;">Siūloma Produkcija</h2>
+    <div id="grower-products-container">
+        <p>Kraunamas produktų sąrašas...</p>
+    </div>
+
+    <hr style="margin: 2rem 0;">
+    <h2>Atsiliepimai</h2>
+    
+    <div id="add-review-container" style="margin-bottom: 2rem;">
+        <h3>Palikite savo atsiliepimą</h3>
+        <form id="review-form">
+            <div class="form-group">
+                <label for="reviewer_name">Jūsų vardas:</label>
+                <input type="text" id="reviewer_name" placeholder="Anonimas">
+            </div>
+            <div class="form-group">
+                <label for="rating">Įvertinimas (1-5):</label>
+                <select id="rating" required>
+                    <option value="">-- Pasirinkite --</option>
+                    <option value="5">⭐⭐⭐⭐⭐ (Puikiai)</option>
+                    <option value="4">⭐⭐⭐⭐ (Gerai)</option>
+                    <option value="3">⭐⭐⭐ (Vidutiniškai)</option>
+                    <option value="2">⭐⭐ (Prastai)</option>
+                    <option value="1">⭐ (Labai blogai)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment">Komentaras:</label>
+                <textarea id="comment" rows="3"></textarea>
+            </div>
+            <div id="review-message" style="margin-bottom: 10px; font-weight: bold;"></div>
+            <button type="submit">Pateikti</button>
+        </form>
+    </div>
+
+    <div id="reviews-list-container">
+        <p>Kraunami atsiliepimai...</p>
+    </div>
     </main>
 
 </body>
