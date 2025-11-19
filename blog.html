@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Augintojo portalas</title>
+    <title>Naudingi Straipsniai</title>
     <link rel="stylesheet" href="style.css">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="global.js" defer></script>
-    </head>
+    <script src="blog.js" defer></script> </head>
 <body>
 
     <header>
         <div class="header-content">
-            <h1>Augintojo Portalas</h1>
+            <h1>Vaistinių Augalų Enciklopedija</h1>
             <button id="menu-toggle" aria-label="Meniu">
                 <span></span>
                 <span></span>
@@ -24,18 +21,18 @@
         
         <nav id="main-nav">
             <div id="nav-links">
-                <a href="index.html">Vieša Enciklopedija</a>
-                <a href="blog.html">Tinklaraštis</a>
-                </div>
+                <a href="index.html">Augalų sąrašas</a>
+                <a href="map.html">Augintojų žemėlapis</a>
+                <a href="blog.html">Tinklaraštis</a> </div>
         </nav>
     </header>
+
     <main>
-        <h2>Profilio Valdymas</h2>
-        <div id="portal-content">
-            <p>Kraunama...</p>
-            </div>
+        <h2>Naujausi Straipsniai</h2>
+        <div id="articles-container">
+            <p>Kraunami straipsniai...</p>
+        </div>
     </main>
 
-    <script src="portal.js" defer></script>
 </body>
 </html>

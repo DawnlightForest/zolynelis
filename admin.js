@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Jei administratorius, krauname abu sąrašus
             loadPendingGrowers();
             loadPlantsAdminList(); // <-- NAUJAS IŠKVIETIMAS
+            loadArticlesAdminList();
         })
         .catch(() => {
             window.location.href = 'login.html';
@@ -335,4 +336,105 @@ window.deletePlant = async function(plantId) {
     } catch (error) {
         alert('Tinklo klaida trinant augalą.');
     }
+}
+// ================================================
+// === STRAIPSNIŲ VALDYMAS (TINKLARAŠTIS) ===
+// ================================================
+
+function loadArticlesAdminList() {
+    const container = document.getElementById('articles-admin-container');
+    container.innerHTML = '<p>Kraunama...</p>';
+    
+    fetch('api/get_articles.php')
+        .then(response => response.json())
+        .then(articles => {
+            let html = `
+                <button onclick="window.showArticleForm()" style="margin-bottom: 15px;">+ Rašyti naują straipsnį</button>
+                <div id="article-form-container" style="display: none; margin-bottom: 20px; padding: 20px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="padding: 8px; text-align: left;">Pavadinimas</th>
+                            <th style="padding: 8px; text-align: left;">Data</th>
+                            <th style="padding: 8px; text-align: left;">Veiksmai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            if (articles.length === 0) {
+                html += '<tr><td colspan="3" style="padding: 8px; text-align: center;">Straipsnių nėra.</td></tr>';
+            } else {
+                articles.forEach(article => {
+                    html += `
+                        <tr id="article-row-${article.id}">
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${article.title}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date(article.created_at).toLocaleDateString('lt-LT')}</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                                <button onclick="window.deleteArticle(${article.id})" class="danger">Trinti</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        });
+}
+
+window.showArticleForm = function() {
+    const container = document.getElementById('article-form-container');
+    container.style.display = 'block';
+    container.innerHTML = `
+        <h4>Naujas Straipsnis</h4>
+        <form id="article-form">
+            <div class="form-group">
+                <label>Pavadinimas:</label>
+                <input type="text" id="article_title" required>
+            </div>
+            <div class="form-group">
+                <label>Viršelio Nuotrauka (URL arba įkelti per kitą formą):</label>
+                <input type="text" id="article_image" placeholder="pvz: uploads/image.jpg">
+            </div>
+            <div class="form-group">
+                <label>Turinys:</label>
+                <textarea id="article_content" rows="10" required></textarea>
+            </div>
+            <button type="submit">Paskelbti</button>
+            <button type="button" onclick="document.getElementById('article-form-container').style.display='none'" class="secondary">Atšaukti</button>
+        </form>
+    `;
+    
+    document.getElementById('article-form').addEventListener('submit', window.handleArticleSubmit);
+}
+
+window.handleArticleSubmit = async function(e) {
+    e.preventDefault();
+    const data = {
+        title: document.getElementById('article_title').value,
+        content: document.getElementById('article_content').value,
+        image_url: document.getElementById('article_image').value
+    };
+    
+    try {
+        const response = await fetch('api/add_article.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            alert('Straipsnis paskelbtas!');
+            loadArticlesAdminList();
+        } else {
+            alert('Klaida kuriant straipsnį.');
+        }
+    } catch (e) {
+        alert('Tinklo klaida.');
+    }
+}
+
+window.deleteArticle = async function(id) {
+    if (!confirm('Ar tikrai trinti šį straipsnį?')) return;
+    await fetch(`api/delete_article.php?id=${id}`, { method: 'DELETE' });
+    loadArticlesAdminList();
 }

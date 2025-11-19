@@ -58,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 productsContainer.innerHTML = '<p>Šis augintojas šiuo metu neturi aktyvių produktų.</p>';
             }
+
+            loadReviews(growerId); 
+            setupReviewForm(growerId);
+
         })
         .catch(error => {
             console.error('Klaida gaunant augintojo duomenis:', error);
@@ -65,3 +69,82 @@ document.addEventListener('DOMContentLoaded', () => {
             productsContainer.style.display = 'none';
         });
 });
+
+
+// FUNKCIJA: Įkelia ir parodo visus atsiliepimus
+function loadReviews(growerId) {
+    const container = document.getElementById('reviews-list-container');
+    container.innerHTML = '<p>Kraunami atsiliepimai...</p>';
+
+    fetch(`api/get_reviews.php?grower_profile_id=${growerId}`)
+        .then(response => response.json())
+        .then(reviews => {
+            if (reviews.error) {
+                throw new Error(reviews.error);
+            }
+            
+            if (reviews.length === 0) {
+                container.innerHTML = '<p>Šis augintojas kol kas neturi atsiliepimų.</p>';
+                return;
+            }
+
+            let html = '';
+            reviews.forEach(review => {
+                // Sukuriame žvaigždutes
+                let stars = '⭐'.repeat(review.rating);
+                
+                html += `
+                    <div style="border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                        <strong>${review.reviewer_name}</strong> - ${stars}
+                        <p style="margin-top: 5px;">${review.comment}</p>
+                        <small style="color: #777;">${new Date(review.created_at).toLocaleDateString('lt-LT')}</small>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Klaida gaunant atsiliepimus:', error);
+            container.innerHTML = '<p class="error">Klaida kraunant atsiliepimus.</p>';
+        });
+}
+
+// FUNKCIJA: Nustato atsiliepimo formos siuntimą
+function setupReviewForm(growerId) {
+    const form = document.getElementById('review-form');
+    const messageBox = document.getElementById('review-message');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        messageBox.textContent = 'Siunčiama...';
+
+        const reviewData = {
+            grower_profile_id: growerId,
+            rating: document.getElementById('rating').value,
+            comment: document.getElementById('comment').value,
+            reviewer_name: document.getElementById('reviewer_name').value
+        };
+
+        try {
+            const response = await fetch('api/add_review.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reviewData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                messageBox.textContent = result.message;
+                messageBox.style.color = 'green';
+                form.reset(); // Išvalome formą
+                loadReviews(growerId); // Atnaujiname atsiliepimų sąrašą
+            } else {
+                throw new Error(result.error || 'Nežinoma klaida.');
+            }
+        } catch (error) {
+            messageBox.textContent = error.message;
+            messageBox.style.color = 'red';
+        }
+    });
+}
