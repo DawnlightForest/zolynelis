@@ -382,9 +382,11 @@ function loadArticlesAdminList() {
         });
 }
 
+// PAKEISKITE ŠIĄ FUNKCIJĄ (admin.js faile)
 window.showArticleForm = function() {
     const container = document.getElementById('article-form-container');
     container.style.display = 'block';
+    
     container.innerHTML = `
         <h4>Naujas Straipsnis</h4>
         <form id="article-form">
@@ -392,10 +394,13 @@ window.showArticleForm = function() {
                 <label>Pavadinimas:</label>
                 <input type="text" id="article_title" required>
             </div>
+            
             <div class="form-group">
-                <label>Viršelio Nuotrauka (URL arba įkelti per kitą formą):</label>
-                <input type="text" id="article_image" placeholder="pvz: uploads/image.jpg">
+                <label>Viršelio Nuotrauka:</label>
+                <input type="file" id="article_image_file" accept="image/png, image/jpeg, image/gif">
+                <small>Pasirinkite nuotrauką iš savo kompiuterio.</small>
             </div>
+            
             <div class="form-group">
                 <label>Turinys:</label>
                 <textarea id="article_content" rows="10" required></textarea>
@@ -408,28 +413,65 @@ window.showArticleForm = function() {
     document.getElementById('article-form').addEventListener('submit', window.handleArticleSubmit);
 }
 
+// PAKEISKITE ŠIĄ FUNKCIJĄ (admin.js faile)
 window.handleArticleSubmit = async function(e) {
     e.preventDefault();
-    const data = {
-        title: document.getElementById('article_title').value,
-        content: document.getElementById('article_content').value,
-        image_url: document.getElementById('article_image').value
-    };
-    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Keliama...';
+    submitBtn.disabled = true;
+
+    const fileInput = document.getElementById('article_image_file');
+    let imageUrl = ''; // Jei nuotraukos nėra, bus tuščia
+
     try {
+        // 1. ĮKELIAME NUOTRAUKĄ (Jei pasirinkta)
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('imageFile', file);
+
+            // Naudojame tą patį API, kurį sukūrėme augalams
+            const uploadResponse = await fetch('api/upload_image.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const uploadResult = await uploadResponse.json();
+
+            if (!uploadResponse.ok) {
+                throw new Error(uploadResult.error || 'Nepavyko įkelti nuotraukos.');
+            }
+            
+            imageUrl = uploadResult.filePath; // Gauname kelią, pvz., "uploads/plant_123.jpg"
+        }
+
+        // 2. IŠSAUGOME STRAIPSNĮ
+        const data = {
+            title: document.getElementById('article_title').value,
+            content: document.getElementById('article_content').value,
+            image_url: imageUrl // Siunčiame gautą nuorodą
+        };
+    
         const response = await fetch('api/add_article.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
+
         if (response.ok) {
             alert('Straipsnis paskelbtas!');
-            loadArticlesAdminList();
+            document.getElementById('article-form-container').style.display = 'none';
+            loadArticlesAdminList(); // Atnaujiname sąrašą
         } else {
             alert('Klaida kuriant straipsnį.');
         }
+
     } catch (e) {
-        alert('Tinklo klaida.');
+        alert('Klaida: ' + e.message);
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
 }
 

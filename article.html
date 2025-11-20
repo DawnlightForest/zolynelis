@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Straipsnis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="global.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>Vaistinių Augalų Enciklopedija</h1>
+            <button id="menu-toggle" aria-label="Meniu"><span></span><span></span><span></span></button>
+        </div>
+        <nav id="main-nav">
+            <div id="nav-links">
+                <a href="index.html">Augalų sąrašas</a>
+                <a href="map.html">Augintojų žemėlapis</a>
+                <a href="blog.html">Tinklaraštis</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <a href="blog.html" style="margin-bottom: 1rem; display: inline-block;">&larr; Atgal į tinklaraštį</a>
+        
+        <div id="article-container" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <p>Kraunamas straipsnis...</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            // Priverčiame ID būti skaičiumi (pašalina tarpus ir tekstą)
+            const id = parseInt(params.get('id')); 
+            const container = document.getElementById('article-container');
+
+            console.log("Ieškomas ID:", id); // Tikrinimui konsolėje
+
+            if(!id) {
+                container.innerHTML = '<p class="error">Adrese nerastas straipsnio ID. Grįžkite į tinklaraštį ir pasirinkite straipsnį.</p>';
+                return;
+            }
+
+            fetch('api/get_articles.php') 
+                .then(res => res.json())
+                .then(articles => {
+                    console.log("Gauti straipsniai:", articles); // Tikrinimui
+
+                    // Ieškome straipsnio, kurio ID sutampa (naudojame == kad nereiktų rūpintis dėl string/int)
+                    const article = articles.find(a => a.id == id);
+
+                    if (!article) {
+                        container.innerHTML = `<p class="error">Straipsnis su ID ${id} nerastas duomenų bazėje.</p>`;
+                        return;
+                    }
+                    
+                    // Pataisome nuotraukos kelią (jei reikia)
+                    let imagePath = article.image_url;
+                    let imageHtml = '';
+                    if (imagePath) {
+                        if (!imagePath.startsWith('uploads/') && !imagePath.startsWith('http')) {
+                            imagePath = 'uploads/' + imagePath;
+                        }
+                        imageHtml = `<img src="${imagePath}" style="max-width:100%; height:auto; margin-bottom:20px; border-radius:5px; display:block;">`;
+                    }
+                    
+                    container.innerHTML = `
+                        <h1>${article.title}</h1>
+                        <small style="color:#777; display:block; margin-bottom:20px;">${new Date(article.created_at).toLocaleDateString('lt-LT')}</small>
+                        ${imageHtml}
+                        <div style="line-height:1.8; font-size:1.1rem; color: #333;">
+                            ${article.content.replace(/\n/g, '<br>')}
+                        </div>
+                    `;
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = '<p class="error">Įvyko klaida gaunant straipsnį.</p>';
+                });
+        });
+    </script>
+</body>
+</html>

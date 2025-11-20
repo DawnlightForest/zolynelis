@@ -262,6 +262,98 @@ button.secondary:hover {
     width: 100%;
     margin-top: 10px;
 }
+/* =================================
+   BLOGO KORTELĖS STILIAI (NAUJAS)
+   ================================= */
+
+/* Pataisome pačią kortelę */
+.plant-card {
+    display: flex;
+    flex-direction: column; /* Elementai vienas po kito */
+    overflow: hidden; /* Kad nuotrauka neišlįstų už apvalių kampų */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; /* Kad visos kortelės būtų vienodo aukščio */
+}
+
+.plant-card:hover {
+    transform: translateY(-5px); /* Pakyla užvedus pelę */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+/* Nuotraukos konteineris */
+.blog-image-wrapper {
+    height: 200px; /* Fiksuotas aukštis nuotraukai */
+    width: 100%;
+    overflow: hidden;
+}
+
+.blog-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Nuotrauka užpildo plotą neišsikraipydama */
+    transition: transform 0.3s ease;
+}
+
+.plant-card:hover .blog-image-wrapper img {
+    transform: scale(1.05); /* Lengvas priartinimas užvedus */
+}
+
+/* Tekstinė dalis */
+.blog-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Užpildo likusią vietą */
+}
+
+/* Data */
+.blog-date {
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Pavadinimas */
+.blog-title {
+    font-size: 1.4rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+}
+
+.blog-title a {
+    text-decoration: none;
+    color: var(--dark-text);
+    transition: color 0.2s;
+}
+
+.blog-title a:hover {
+    color: var(--primary-color);
+}
+
+/* Teksto ištrauka */
+.blog-excerpt {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Nuoroda "Skaityti toliau" */
+.read-more-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-top: auto; /* Nustumia į apačią */
+    display: inline-block;
+}
+
+.read-more-link:hover {
+    text-decoration: underline;
+}
 /* Visiems ekranams, kurie siauresni nei 768px */
 @media (max-width: 768px) {
     
