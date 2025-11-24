@@ -341,6 +341,8 @@ window.deletePlant = async function(plantId) {
 // === STRAIPSNIŲ VALDYMAS (TINKLARAŠTIS) ===
 // ================================================
 
+// PAKEISKITE ŠIĄ FUNKCIJĄ admin.js FAILE:
+
 function loadArticlesAdminList() {
     const container = document.getElementById('articles-admin-container');
     container.innerHTML = '<p>Kraunama...</p>';
@@ -349,8 +351,9 @@ function loadArticlesAdminList() {
         .then(response => response.json())
         .then(articles => {
             let html = `
-                <button onclick="window.showArticleForm()" style="margin-bottom: 15px;">+ Rašyti naują straipsnį</button>
+                <button onclick="window.showArticleForm(null)" style="margin-bottom: 15px;">+ Rašyti naują straipsnį</button>
                 <div id="article-form-container" style="display: none; margin-bottom: 20px; padding: 20px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+                
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background-color: #f2f2f2;">
@@ -368,9 +371,10 @@ function loadArticlesAdminList() {
                 articles.forEach(article => {
                     html += `
                         <tr id="article-row-${article.id}">
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${article.title}</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date(article.created_at).toLocaleDateString('lt-LT')}</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                            <td data-label="Pavadinimas" style="padding: 8px; border-bottom: 1px solid #ddd;">${article.title}</td>
+                            <td data-label="Data" style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date(article.created_at).toLocaleDateString('lt-LT')}</td>
+                            <td data-label="Veiksmai" style="padding: 8px; border-bottom: 1px solid #ddd;">
+                                <button onclick="window.showArticleForm(${article.id})">Redaguoti</button>
                                 <button onclick="window.deleteArticle(${article.id})" class="danger">Trinti</button>
                             </td>
                         </tr>
@@ -379,33 +383,57 @@ function loadArticlesAdminList() {
             }
             html += '</tbody></table>';
             container.innerHTML = html;
+            
+            // Iškart pridedame įvykį mygtukui "Rašyti naują straipsnį", jei jis buvo pergeneruotas
+            // (Nors html eilutėje onlick jau veikia, bet dėl tvarkos)
+        })
+        .catch(error => {
+            container.innerHTML = `<p class="error">Klaida gaunant straipsnius.</p>`;
         });
 }
 
 // PAKEISKITE ŠIĄ FUNKCIJĄ (admin.js faile)
-window.showArticleForm = function() {
+window.showArticleForm = async function(articleId = null) {
     const container = document.getElementById('article-form-container');
     container.style.display = 'block';
     
+    let article = { title: '', content: '', image_url: '' }; // Tuščias objektas
+
+    // Jei redaguojame, gauname duomenis
+    if (articleId) {
+        container.innerHTML = '<p>Kraunami straipsnio duomenys...</p>';
+        try {
+            const response = await fetch(`api/get_article.php?id=${articleId}`);
+            article = await response.json();
+        } catch (e) {
+            alert("Klaida gaunant straipsnį");
+            return;
+        }
+    }
+
     container.innerHTML = `
-        <h4>Naujas Straipsnis</h4>
+        <h4>${articleId ? 'Redaguoti Straipsnį' : 'Naujas Straipsnis'}</h4>
         <form id="article-form">
+            <input type="hidden" id="article_id" value="${article.id || ''}">
+            
             <div class="form-group">
                 <label>Pavadinimas:</label>
-                <input type="text" id="article_title" required>
+                <input type="text" id="article_title" value="${article.title}" required>
             </div>
             
             <div class="form-group">
                 <label>Viršelio Nuotrauka:</label>
                 <input type="file" id="article_image_file" accept="image/png, image/jpeg, image/gif">
-                <small>Pasirinkite nuotrauką iš savo kompiuterio.</small>
+                <small>Pasirinkite naują, jei norite pakeisti.</small>
+                <input type="hidden" id="article_image_url_hidden" value="${article.image_url || ''}">
+                ${article.image_url ? `<div style="margin-top:5px;"><img src="${article.image_url}" style="height:100px;"></div>` : ''}
             </div>
             
             <div class="form-group">
                 <label>Turinys:</label>
-                <textarea id="article_content" rows="10" required></textarea>
+                <textarea id="article_content" rows="10" required>${article.content}</textarea>
             </div>
-            <button type="submit">Paskelbti</button>
+            <button type="submit">${articleId ? 'Atnaujinti' : 'Paskelbti'}</button>
             <button type="button" onclick="document.getElementById('article-form-container').style.display='none'" class="secondary">Atšaukti</button>
         </form>
     `;
@@ -413,64 +441,58 @@ window.showArticleForm = function() {
     document.getElementById('article-form').addEventListener('submit', window.handleArticleSubmit);
 }
 
-// PAKEISKITE ŠIĄ FUNKCIJĄ (admin.js faile)
 window.handleArticleSubmit = async function(e) {
     e.preventDefault();
     const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Keliama...';
+    submitBtn.textContent = 'Saugoma...';
     submitBtn.disabled = true;
 
+    const articleId = document.getElementById('article_id').value;
     const fileInput = document.getElementById('article_image_file');
-    let imageUrl = ''; // Jei nuotraukos nėra, bus tuščia
+    let imageUrl = document.getElementById('article_image_url_hidden').value;
 
     try {
-        // 1. ĮKELIAME NUOTRAUKĄ (Jei pasirinkta)
+        // 1. ĮKELIAME NUOTRAUKĄ (Jei pasirinkta nauja)
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
             const formData = new FormData();
             formData.append('imageFile', file);
 
-            // Naudojame tą patį API, kurį sukūrėme augalams
-            const uploadResponse = await fetch('api/upload_image.php', {
-                method: 'POST',
-                body: formData
-            });
-
+            const uploadResponse = await fetch('api/upload_image.php', { method: 'POST', body: formData });
             const uploadResult = await uploadResponse.json();
 
-            if (!uploadResponse.ok) {
-                throw new Error(uploadResult.error || 'Nepavyko įkelti nuotraukos.');
-            }
-            
-            imageUrl = uploadResult.filePath; // Gauname kelią, pvz., "uploads/plant_123.jpg"
+            if (!uploadResponse.ok) throw new Error(uploadResult.error || 'Nepavyko įkelti nuotraukos.');
+            imageUrl = uploadResult.filePath;
         }
 
-        // 2. IŠSAUGOME STRAIPSNĮ
+        // 2. SAUGOME STRAIPSNĮ
         const data = {
+            id: articleId, // Siunčiame ID (jei yra)
             title: document.getElementById('article_title').value,
             content: document.getElementById('article_content').value,
-            image_url: imageUrl // Siunčiame gautą nuorodą
+            image_url: imageUrl
         };
     
-        const response = await fetch('api/add_article.php', {
+        // Jei yra ID, darome UPDATE, jei ne - ADD
+        const apiUrl = articleId ? 'api/update_article.php' : 'api/add_article.php';
+        
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (response.ok) {
-            alert('Straipsnis paskelbtas!');
+            alert(articleId ? 'Straipsnis atnaujintas!' : 'Straipsnis paskelbtas!');
             document.getElementById('article-form-container').style.display = 'none';
-            loadArticlesAdminList(); // Atnaujiname sąrašą
+            loadArticlesAdminList();
         } else {
-            alert('Klaida kuriant straipsnį.');
+            alert('Klaida saugant straipsnį.');
         }
 
     } catch (e) {
         alert('Klaida: ' + e.message);
     } finally {
-        submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }
 }

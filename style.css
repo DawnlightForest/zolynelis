@@ -354,6 +354,19 @@ button.secondary:hover {
 .read-more-link:hover {
     text-decoration: underline;
 }
+/* Pridedame taisyklę, kad ilgi žodžiai nelaužytų dizaino */
+h1, h2, h3, p {
+    overflow-wrap: break-word; /* Standartinis būdas */
+    word-wrap: break-word;     /* Senesnėms naršyklėms */
+    word-break: break-word;    /* Papildomas saugiklis */
+    hyphens: auto;             /* Automatinis skiemenavimas (jei naršyklė palaiko) */
+}
+
+/* Specifiškai straipsnio konteineriui (kad tekstas tikrai liktų viduje) */
+#article-container {
+    max-width: 100%; /* Užtikriname, kad neviršytų tėvinio elemento */
+    overflow: hidden; /* Paslepia viską, kas vis tiek išlįstų (nors break-word turėtų padėti) */
+}
 /* Visiems ekranams, kurie siauresni nei 768px */
 @media (max-width: 768px) {
     
