@@ -1,288 +1,181 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
-:root {
-    --primary-color: #4CAF50; /* Pagrindinė žalia */
-    --primary-dark: #388E3C;  /* Tamsi žalia (mygtukams) */
-    --light-gray: #f4f4f4;    /* Fonas */
-    --dark-text: #333;        /* Pagrindinis tekstas */
-    --card-bg: #ffffff;       /* Kortelių fonas */
-    --border-color: #ddd;     /* Rėmelių spalva */
+/* ============================================================
+   VAISTINIŲ AUGALŲ ENCIKLOPEDIJA - MODERNUS STILIUS (2025)
+   ============================================================ */
 
-    /* --- PRIDĖKITE ŠIAS NAUJAS SPALVAS --- */
-    --warning-color: #D35400;  /* Švelni "deginta" oranžinė (Adminui) */
-    --info-color: #16A085;     /* Žalsvai melsva (Portalui) */
-    --secondary-color: #8D6E63; /* Švelni ruda/pilka (Atsijungti) */
+/* 1. ŠRIFTAI IR KINTAMIEJI */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700&display=swap');
+
+:root {
+    /* Gamtiška spalvų paletė */
+    --primary-color: #2E7D32;      /* Tamsiai žalia (Miškas) */
+    --primary-light: #4CAF50;      /* Šviesiai žalia (Žolė) */
+    --primary-dark: #1B5E20;       /* Labai tamsi žalia */
+    --accent-color: #FF9800;       /* Oranžinė (Akcentams) */
+    
+    /* Fonai ir tekstas */
+    --bg-body: #f4f7f6;            /* Labai šviesiai pilkšvas/žalsvas */
+    --bg-card: #ffffff;
+    --text-main: #333333;
+    --text-light: #666666;
+    --border-color: #e0e0e0;
+
+    /* Specialūs mygtukai */
+    --btn-danger: #e74c3c;
+    --btn-info: #3498db;
+    --btn-secondary: #95a5a6;
 }
+
+/* 2. BAZINIAI NUSTATYMAI */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Lato', Arial, sans-serif;
-    background-color: var(--light-gray);
-    color: var(--dark-text);
+    font-family: 'Lato', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
     line-height: 1.6;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Kad footeris būtų apačioje */
 }
+
+h1, h2, h3, h4 {
+    font-family: 'Merriweather', serif; /* Antraštėms - elegantiškesnis šriftas */
+    color: var(--primary-dark);
+    margin-bottom: 0.5em;
+    overflow-wrap: break-word; 
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* 3. HEADER IR NAVIGACIJA */
 header {
-    background: var(--primary-color);
-    color: var(--card-bg);
-    padding: 1rem;
-    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+/* Navigacijos juosta */
+header nav {
+    background-color: var(--primary-dark);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#nav-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+header nav a {
+    color: white;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+header nav a:hover {
+    background-color: rgba(255,255,255,0.15);
+    color: white;
+    transform: translateY(0); /* Navigacijoje nekilnojame */
+}
+
+/* Hamburger mygtukas */
+#menu-toggle {
+    display: none; /* Paslėpta dideliuose ekranuose */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 25px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* 4. PAGRINDINIS TURINYS */
 main {
     width: 90%;
     max-width: 1200px;
     margin: 2rem auto;
-}
-#plants-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-}
-.plant-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px var(--dark-text)(0,0,0,0.1);
-}
-.plant-card h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-}
-.plant-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 3px;
-}
-#map-container {
-    height: 500px;
-    width: 100%;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    margin-top: 1rem;
-}
-/* --- Header išdėstymas --- */
-header {
-    padding: 0; /* Nuimame seną padding */
-}
-.header-content {
-    display: flex;
-    justify-content: space-between; /* Elementai bus išdėstyti galuose */
-    align-items: center;
-    padding: 1rem;
-    background: var(--primary-color); /* Antraštės fonas */
-    color: white; /* Tekstas baltas */
-}
-header h1 {
-    margin: 0;
-    font-size: 1.5rem; /* Šiek tiek mažesnis šriftas mobiliems */
-    flex-grow: 1; /* Leidžia antraštei užimti kuo daugiau vietos */
-    text-align: left; /* Antraštė kairėje */
-}
-
-/* --- Hamburger mygtukas (pagal nutylėjimą paslėptas) --- */
-#menu-toggle {
-    display: none; /* Pagal nutylėjimą paslėptas dideliuose ekranuose */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0; /* Nuimame paddingą, kad span elementai būtų tikslūs */
-    width: 30px; /* Mygtuko plotis */
-    height: 25px; /* Mygtuko aukštis */
-    position: relative; /* Kad galėtume pozicionuoti span */
-    flex-direction: column; /* Brūkšneliai vienas po kito */
-    justify-content: space-around; /* Tarpai tarp brūkšnelių */
-    z-index: 1001; /* Užtikriname, kad būtų viršuje */
-}
-
-#menu-toggle span {
-    display: block; /* Kad span užimtų visą liniją */
-    width: 100%;
-    height: 3px; /* Brūkšnelių aukštis */
-    background-color: white; /* Brūkšnelių spalva */
-    border-radius: 2px; /* Šiek tiek apvalinti kampai */
-    transition: all 0.3s ease-in-out; /* Animacija atidarant/uždarant meniu */
-}
-
-/* --- Navigacijos nuorodos (dideliems ekranams) --- */
-#main-nav {
-    background-color: var(--primary-dark);
-}
-#nav-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 0.5rem;
-}
-/* 1. Navigacijos juosta (konteineris) */
-header nav {
-    background-color: rgba(0, 0, 0, 0.1); /* Šiek tiek patamsiname foną po mygtukais */
-    padding: 10px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px; /* Tarpai tarp mygtukų */
-}
-
-/* 2. Bendras VISŲ nuorodų stilius (Standartiniai žali mygtukai) */
-header nav a {
-    background-color: var(--primary-dark); /* Tamsiai žalia */
-    color: white; 
-    padding: 10px 15px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;      /* Apvalinti kampai */
-    transition: all 0.2s ease; /* Animacija */
-    display: inline-block;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    border: none; /* Užtikriname, kad nebūtų rėmelių */
-}
-
-/* 3. Užvedimo efektas visiems mygtukams */
-header nav a:hover {
-    transform: translateY(-2px); /* Mygtukas šiek tiek pakyla užvedus */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Atsiranda šešėlis */
-    opacity: 0.9;
-}
-.form-group {
-    margin-bottom: 1rem;
-}
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"],
-.form-group input[type="tel"],
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    box-sizing: border-box; /* Svarbu, kad padding neišstumtų elemento */
-}
-/* Bendras mygtuko stilius */
-/* Bendras mygtuko stilius (formoms ir pan.) */
-button,
-.button {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    font-family: 'Lato', sans-serif;
-    transition: background-color 0.2s ease, opacity 0.2s ease;
-}
-button:hover,
-.button:hover {
-    opacity: 0.9;
-}
-
-/* Specifinis stilius pavojingiems mygtukams (Trinti) */
-button.danger {
-    background-color: #dc3545; /* PATAISYTA: Raudona */
-}
-button.danger:hover {
-    background-color: #c9302c;
-}
-
-/* Specifinis stilius antriniams mygtukams (Atšaukti) */
-button.secondary {
-    background-color: #aaa;
-}
-button.secondary:hover {
-    background-color: #888;
-}
-/* Bendras stilius naujiems mygtukams navigacijoje */
-.nav-button {
-    padding: 0.5rem 0.75rem;
-    text-transform: uppercase;
-    font-size: 0.9em;
-}
-
-/* Administratoriaus mygtukas (Oranžinis) */
-.nav-button.admin {
-    background-color: var(--warning-color); 
-}
-.nav-button.admin:hover {
-    background-color: #A64200 !important;
-}
-
-/* Augintojas - Žydra (Informacinė spalva) */
-.nav-button.grower {
-    background-color: var(--info-color);
-}
-.nav-button.grower:hover {
-    background-color: #117A65 !important;
-}
-
-/* Atsijungti - Pilka/Ruda (Antrinė spalva) */
-.nav-button.logout {
-    background-color: var(--secondary-color);
-}
-.nav-button.logout:hover {
-    background-color: #6D4C41 !important;
-}
-/* Prisijungimo mygtukas (lieka standartinis tamsiai žalias) */
-.nav-button.login {
-    background-color: var(--primary-dark);
-}
-.nav-button.login:hover {
-    background-color: #4a9e4d !important;
-}
-.auth-container {
-    max-width: 400px; /* Nustatome maksimalų plotį, kad nebūtų per plati */
-    width: 90%;       /* Mobiliuosiuose užims 90% ekrano pločio */
-    margin: 50px auto; /* 'auto' centruoja elementą horizontaliai */
-    padding: 30px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    flex: 1; /* Užpildo vietą iki footerio */
+    background: white;
+    padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Šiek tiek gražesnis šešėlis */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.auth-container h2 {
-    text-align: center; /* Centruojame antraštę "Prisijungimas" */
-    color: var(--primary-dark);
-    margin-top: 0;
+/* 5. KORTELĖS (AUGALAI IR BLOGAS) */
+#plants-container, #articles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
 }
 
-/* Kad mygtukas "Prisijungti" būtų per visą plotį */
-#login-form button,
-#register-form button {
-    width: 100%;
-    margin-top: 10px;
-}
-/* =================================
-   BLOGO KORTELĖS STILIAI (NAUJAS)
-   ================================= */
-
-/* Pataisome pačią kortelę */
 .plant-card {
-    display: flex;
-    flex-direction: column; /* Elementai vienas po kito */
-    overflow: hidden; /* Kad nuotrauka neišlįstų už apvalių kampų */
+    background: var(--bg-card);
+    border: 1px solid transparent; /* Nėra rėmelio, tik šešėlis */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%; /* Kad visos kortelės būtų vienodo aukščio */
+    display: flex;
+    flex-direction: column;
 }
 
 .plant-card:hover {
-    transform: translateY(-5px); /* Pakyla užvedus pelę */
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    border-color: var(--primary-light);
 }
 
-/* Nuotraukos konteineris */
 .blog-image-wrapper {
-    height: 200px; /* Fiksuotas aukštis nuotraukai */
+    height: 180px;
     width: 100%;
     overflow: hidden;
 }
@@ -290,199 +183,268 @@ button.secondary:hover {
 .blog-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Nuotrauka užpildo plotą neišsikraipydama */
-    transition: transform 0.3s ease;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
 .plant-card:hover .blog-image-wrapper img {
-    transform: scale(1.05); /* Lengvas priartinimas užvedus */
+    transform: scale(1.1);
 }
 
-/* Tekstinė dalis */
 .blog-content {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Užpildo likusią vietą */
-}
-
-/* Data */
-.blog-date {
-    font-size: 0.85rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-/* Pavadinimas */
-.blog-title {
-    font-size: 1.4rem;
-    margin: 0 0 1rem 0;
-    line-height: 1.3;
-}
-
-.blog-title a {
-    text-decoration: none;
-    color: var(--dark-text);
-    transition: color 0.2s;
-}
-
-.blog-title a:hover {
-    color: var(--primary-color);
-}
-
-/* Teksto ištrauka */
-.blog-excerpt {
-    color: #555;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
     flex-grow: 1;
 }
 
-/* Nuoroda "Skaityti toliau" */
+.blog-title {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.blog-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
 .read-more-link {
-    text-decoration: none;
+    margin-top: auto;
     color: var(--primary-color);
     font-weight: bold;
-    font-size: 0.95rem;
-    margin-top: auto; /* Nustumia į apačią */
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding-top: 1rem;
+}
+
+/* 6. FORMAS IR MYGTUKAI */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: var(--text-main);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+/* Mygtukai */
+button, .button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s, transform 0.1s;
     display: inline-block;
 }
 
-.read-more-link:hover {
-    text-decoration: underline;
-}
-/* Pridedame taisyklę, kad ilgi žodžiai nelaužytų dizaino */
-h1, h2, h3, p {
-    overflow-wrap: break-word; /* Standartinis būdas */
-    word-wrap: break-word;     /* Senesnėms naršyklėms */
-    word-break: break-word;    /* Papildomas saugiklis */
-    hyphens: auto;             /* Automatinis skiemenavimas (jei naršyklė palaiko) */
+button:hover, .button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
-/* Specifiškai straipsnio konteineriui (kad tekstas tikrai liktų viduje) */
-#article-container {
-    max-width: 100%; /* Užtikriname, kad neviršytų tėvinio elemento */
-    overflow: hidden; /* Paslepia viską, kas vis tiek išlįstų (nors break-word turėtų padėti) */
+button:active {
+    transform: translateY(1px);
 }
-/* Visiems ekranams, kurie siauresni nei 768px */
+
+/* Specifinės mygtukų spalvos */
+button.danger { background-color: var(--btn-danger); }
+button.danger:hover { background-color: #c0392b; }
+
+button.secondary { background-color: var(--btn-secondary); }
+button.secondary:hover { background-color: #7f8c8d; }
+
+/* Autentifikacijos konteineris */
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border-top: 5px solid var(--primary-color);
+}
+
+/* 7. ŽEMĖLAPIS */
+#map-container, #profile-map {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+}
+#map-container { height: 500px; margin-top: 1rem; }
+
+/* 8. LENTELĖS (TABLES) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-align: left;
+    padding: 15px;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Veiksmų mygtukai lentelėje */
+td button {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    margin-right: 5px;
+}
+
+/* 9. PORAŠTĖ (FOOTER) */
+footer {
+    background-color: var(--primary-dark);
+    color: rgba(255,255,255,0.8);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+}
+
+/* 10. NAVIGACIJOS MYGTUKAI (Spalvoti) */
+.nav-button.admin { background-color: var(--accent-color) !important; }
+.nav-button.admin:hover { background-color: #e65100 !important; }
+
+.nav-button.grower { background-color: var(--btn-info) !important; }
+.nav-button.grower:hover { background-color: #2980b9 !important; }
+
+.nav-button.logout { background-color: #555 !important; }
+.nav-button.logout:hover { background-color: #333 !important; }
+
+.nav-button.login { border: 1px solid rgba(255,255,255,0.5); }
+
+
+/* =================================
+   RESPONSIVE (MOBILIEMS)
+   ================================= */
 @media (max-width: 768px) {
     
+    .header-content {
+        padding: 1rem;
+    }
+    
     main {
-        width: 95%; /* Sumažiname paraštes */
-        margin: 1rem auto;
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0;
+        margin: 0;
+        box-shadow: none;
     }
 
-    /* Augalų sąraše (index.html) rodome 1 kortelę per eilutę */
-    #plants-container {
+    /* Hamburgerio rodymas */
+    #menu-toggle {
+        display: flex;
+    }
+    
+    /* Meniu išskleidimas */
+    #main-nav {
+        display: none; /* Paslėpta */
+        width: 100%;
+    }
+    #main-nav.active {
+        display: block; /* Rodyti paspaudus */
+    }
+    
+    #nav-links {
+        flex-direction: column;
+    }
+    #nav-links a {
+        width: 100%;
+        text-align: left;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Kortelės viena po kitos */
+    #plants-container, #articles-container {
         grid-template-columns: 1fr;
     }
 
-    /* Prisijungimo/Registracijos formos */
-    .auth-container {
-        width: 90%;
-        margin: 20px auto;
-        padding: 15px;
-    }
-
-    /* Slėpti dideles antraštes, jei reikia */
-    h1 {
-        font-size: 1.8rem;
-    }
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    /* Lentelės portale ir admin panelėje */
+    /* Lentelių transformacija į korteles */
     table, thead, tbody, th, td, tr {
-        display: block; /* Paverčiame lentelę blokais */
+        display: block;
     }
-
     table thead tr {
-        position: absolute; /* Paslepiame antraštes (bjaurus, bet greitas būdas) */
+        position: absolute;
         top: -9999px;
         left: -9999px;
     }
-
     table tr {
+        margin-bottom: 1rem;
         border: 1px solid var(--border-color);
-        margin-bottom: 10px;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
     }
-
     table td {
         border: none;
         border-bottom: 1px solid #eee;
         position: relative;
-        padding-left: 50%; /* Padarome vietos etiketei */
+        padding-left: 50%;
         text-align: right;
     }
-
     table td:before {
-        /* Pridedame etiketę iš data-label atributo */
-        content: attr(data-label); /* <-- SVARBIAUSIA DALIS */
+        content: attr(data-label);
         position: absolute;
-        left: 6px;
+        left: 10px;
+        width: 45%;
         padding-right: 10px;
         white-space: nowrap;
+        text-align: left;
         font-weight: bold;
-        text-align: left; /* Etiketę lygiuojame kairėje */
+        color: var(--primary-color);
     }
-    /* --- MOBILIEMS ĮRENGINIAMS --- */
-@media (max-width: 768px) {
-    /* ... Kiti responsyvūs stiliai ... */
-
-    /* Rodome Hamburger mygtuką mobiliuose */
-    #menu-toggle {
-        display: flex; 
-    }
-
-    /* Meniu paslėpimas/rodymas */
-    #main-nav {
-        display: none; /* Paslėpta pagal nutylėjimą mobiliuosiuose */
-        position: absolute; /* Leidžia meniu uždengti turinį */
-        top: 60px; /* Turi būti po header-content */
-        left: 0;
-        width: 100%;
-        background-color: var(--primary-dark);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        z-index: 1000;
-        flex-direction: column;
-    }
-    #main-nav.active {
-        display: flex; /* Rodyti, kai aktyvus */
-    }
-
-    #nav-links {
-        flex-direction: column;
-        width: 100%;
-        padding: 0;
-    }
-    #nav-links a {
-        width: 100%;
-        margin: 0;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        border-radius: 0;
-        text-align: left; /* Nuorodos teksto lygiavimas */
-    }
-    #nav-links a:last-child {
-        border-bottom: none; /* Paskutinė nuoroda be apatinio rėmelio */
-    }
-
-    /* Meniu mygtuko animacija */
-    #menu-toggle.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-5px, 6px);
-    }
-    #menu-toggle.active span:nth-child(2) {
-        opacity: 0; /* Vidurinis brūkšnelis dingsta */
-    }
-    #menu-toggle.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-5px, -6px);
-    }
-}
-    
-    /* Šią dalį reikės pritaikyti kiekvienai lentelei atskirai (sudėtinga) */
-    /* Tai yra pavyzdys, kurį reikės tobulinti */
 }
