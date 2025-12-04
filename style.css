@@ -354,6 +354,81 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Straipsnio turinio stiliai (kad Quill sugeneruotas HTML atrodytų gerai) */
+.article-body h1, .article-body h2, .article-body h3 {
+    margin-top: 1.5rem;
+}
+.article-body ul, .article-body ol {
+    margin-left: 20px;
+    margin-bottom: 1rem;
+}
+.article-body p {
+    margin-bottom: 1rem;
+}
+
+/* =================================
+   QUILL REDAKTORIAUS STILIUS (Custom)
+   ================================= */
+
+/* 1. Įrankių juosta (Toolbar) */
+.ql-toolbar.ql-snow {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa; /* Šviesiai pilkas fonas */
+    font-family: 'Lato', sans-serif;
+}
+
+/* 2. Teksto laukas (Container) */
+.ql-container.ql-snow {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border: 1px solid #ccc;
+    border-top: none; /* Kad nesidubliuotų rėmelis su toolbar */
+    background-color: white;
+    font-family: 'Lato', sans-serif; /* Naudojame svetainės šriftą */
+    font-size: 1rem;
+}
+
+/* 3. Redagavimo zona (vidus) */
+.ql-editor {
+    min-height: 300px; /* Minimalus aukštis */
+    max-height: 600px; /* Maksimalus aukštis (kad neišsitemptų per daug) */
+    overflow-y: auto;  /* Atsiranda slankiklis, jei tekstas ilgas */
+    line-height: 1.8;
+    color: var(--dark-text);
+}
+
+/* 4. Fokusavimo efektas (Kai rašote) */
+/* Pastaba: Quill neturi paprasto :focus, todėl naudojame konteinerį */
+.form-group:focus-within .ql-container.ql-snow,
+.form-group:focus-within .ql-toolbar.ql-snow {
+    border-color: var(--primary-color);
+    transition: border-color 0.3s ease;
+}
+
+/* 5. Antraščių stilius redaktoriuje */
+.ql-editor h1, .ql-editor h2, .ql-editor h3 {
+    font-family: 'Merriweather', serif;
+    color: var(--primary-dark);
+    margin-top: 1em;
+}
+
+/* 6. Placeholder tekstas */
+.ql-editor.ql-blank::before {
+    color: #999;
+    font-style: italic;
+}
+
+/* Priverstinis aukštis Quill redaktoriui */
+#quill-editor-container {
+    height: 400px !important;
+    background-color: white;
+}
+.ql-editor {
+    min-height: 350px;
+}
+
 /* 10. NAVIGACIJOS MYGTUKAI (Spalvoti) */
 .nav-button.admin { background-color: var(--accent-color) !important; }
 .nav-button.admin:hover { background-color: #e65100 !important; }

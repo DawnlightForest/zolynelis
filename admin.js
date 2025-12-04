@@ -1,4 +1,5 @@
 // Failas: admin.js (PILNA VERSIJA SU AUGALŲ VALDYMU)
+let quillEditor; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const pendingGrowersContainer = document.getElementById('pending-growers-container');
@@ -397,9 +398,8 @@ window.showArticleForm = async function(articleId = null) {
     const container = document.getElementById('article-form-container');
     container.style.display = 'block';
     
-    let article = { title: '', content: '', image_url: '' }; // Tuščias objektas
+    let article = { title: '', content: '', image_url: '' };
 
-    // Jei redaguojame, gauname duomenis
     if (articleId) {
         container.innerHTML = '<p>Kraunami straipsnio duomenys...</p>';
         try {
@@ -417,8 +417,13 @@ window.showArticleForm = async function(articleId = null) {
             <input type="hidden" id="article_id" value="${article.id || ''}">
             
             <div class="form-group">
-                <label>Pavadinimas:</label>
-                <input type="text" id="article_title" value="${article.title}" required>
+                <label for="article_image_file">Viršelio Nuotrauka:</label>
+                <input type="file" id="article_image_file" accept="image/png, image/jpeg, image/gif">
+                <small>Pasirinkite naują, jei norite pakeisti.</small>
+                
+                <input type="hidden" id="article_image_url_hidden" value="${article.image_url || ''}">
+                
+                ${article.image_url ? `<div style="margin-top:10px;"><img src="${article.image_url}" style="max-height:150px; border:1px solid #ccc;"></div>` : ''}
             </div>
             
             <div class="form-group">
@@ -431,18 +436,55 @@ window.showArticleForm = async function(articleId = null) {
             
             <div class="form-group">
                 <label>Turinys:</label>
-                <textarea id="article_content" rows="10" required>${article.content}</textarea>
+                <div id="quill-editor-container"></div>
             </div>
+
             <button type="submit">${articleId ? 'Atnaujinti' : 'Paskelbti'}</button>
             <button type="button" onclick="document.getElementById('article-form-container').style.display='none'" class="secondary">Atšaukti</button>
         </form>
     `;
+
+    // --- QUILL INICIJAVIMAS ---
+    // Sukuriame redaktorių nurodytame DIV elemente
+    quillEditor = new Quill('#quill-editor-container', {
+        theme: 'snow',
+        placeholder: 'Rašykite savo straipsnį čia... Galite naudoti antraštes, paryškinimą ar sąrašus.', // <-- NAUJA
+        modules: {
+            toolbar: [
+                [{ 'header': [2, 3, false] }], // H2, H3 ir Normalus (H1 paliekame pavadinimui)
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                [{ 'color': [] }, { 'background': [] }], // Galimybė keisti spalvas
+                ['clean']
+            ]
+        }
+    });
+
+    // Jei redaguojame, įkeliame esamą turinį į redaktorių
+    if (article.content) {
+        quillEditor.root.innerHTML = article.content;
+    }
+    // ---------------------------
     
     document.getElementById('article-form').addEventListener('submit', window.handleArticleSubmit);
 }
 
+// PAKEISKITE ŠIĄ FUNKCIJĄ (admin.js faile)
 window.handleArticleSubmit = async function(e) {
     e.preventDefault();
+    
+    // --- SVARBU: Paimame turinį iš Quill redaktoriaus ---
+    // .root.innerHTML grąžina suformatuotą HTML kodą
+    const contentHtml = quillEditor.root.innerHTML;
+    
+    // Paprastas patikrinimas, ar redaktorius nėra tuščias (Quill tuščias dažnai būna "<p><br></p>")
+    if (quillEditor.getText().trim().length === 0) {
+        alert("Straipsnio turinys negali būti tuščias.");
+        return;
+    }
+    // ----------------------------------------------------
+
     const submitBtn = e.target.querySelector('button[type="submit"]');
     submitBtn.textContent = 'Saugoma...';
     submitBtn.disabled = true;
@@ -467,13 +509,12 @@ window.handleArticleSubmit = async function(e) {
 
         // 2. SAUGOME STRAIPSNĮ
         const data = {
-            id: articleId, // Siunčiame ID (jei yra)
+            id: articleId,
             title: document.getElementById('article_title').value,
-            content: document.getElementById('article_content').value,
+            content: contentHtml, // SIUNČIAME HTML IŠ REDAKTORIAUS
             image_url: imageUrl
         };
     
-        // Jei yra ID, darome UPDATE, jei ne - ADD
         const apiUrl = articleId ? 'api/update_article.php' : 'api/add_article.php';
         
         const response = await fetch(apiUrl, {

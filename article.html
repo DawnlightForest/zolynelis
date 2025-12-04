@@ -34,52 +34,60 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            // Priverčiame ID būti skaičiumi (pašalina tarpus ir tekstą)
-            const id = parseInt(params.get('id')); 
+            const id = params.get('id');
             const container = document.getElementById('article-container');
 
-            console.log("Ieškomas ID:", id); // Tikrinimui konsolėje
+            console.log("1. Puslapis užsikrovė. Ieškomas ID:", id); 
 
-            if(!id) {
-                container.innerHTML = '<p class="error">Adrese nerastas straipsnio ID. Grįžkite į tinklaraštį ir pasirinkite straipsnį.</p>';
+            if (!id) {
+                container.innerHTML = '<p class="error">Klaida: Nuorodoje trūksta straipsnio ID.</p>';
                 return;
             }
 
-            fetch('api/get_articles.php') 
-                .then(res => res.json())
-                .then(articles => {
-                    console.log("Gauti straipsniai:", articles); // Tikrinimui
+            // Svarbu: Naudojame get_article.php (VIENASKAITA)
+            const apiUrl = `api/get_article.php?id=${id}`;
+            console.log("2. Kreipiuosi į:", apiUrl);
 
-                    // Ieškome straipsnio, kurio ID sutampa (naudojame == kad nereiktų rūpintis dėl string/int)
-                    const article = articles.find(a => a.id == id);
+            fetch(apiUrl)
+                .then(response => {
+                    console.log("3. Serverio atsakymo statusas:", response.status);
+                    if (!response.ok) {
+                        throw new Error(`Serverio klaida: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(article => {
+                    console.log("4. Gauti duomenys:", article);
 
-                    if (!article) {
-                        container.innerHTML = `<p class="error">Straipsnis su ID ${id} nerastas duomenų bazėje.</p>`;
+                    if (article.error) {
+                        container.innerHTML = `<p class="error">${article.error}</p>`;
                         return;
                     }
                     
-                    // Pataisome nuotraukos kelią (jei reikia)
-                    let imagePath = article.image_url;
+                    // Jei viskas gerai - atvaizduojame
                     let imageHtml = '';
-                    if (imagePath) {
+                    if (article.image_url) {
+                        let imagePath = article.image_url;
                         if (!imagePath.startsWith('uploads/') && !imagePath.startsWith('http')) {
                             imagePath = 'uploads/' + imagePath;
                         }
-                        imageHtml = `<img src="${imagePath}" style="max-width:100%; height:auto; margin-bottom:20px; border-radius:5px; display:block;">`;
+                        imageHtml = `<div class="blog-image-wrapper" style="height: 400px; margin-bottom: 20px;">
+                                        <img src="${imagePath}" alt="${article.title}">
+                                     </div>`;
                     }
                     
                     container.innerHTML = `
-                        <h1>${article.title}</h1>
-                        <small style="color:#777; display:block; margin-bottom:20px;">${new Date(article.created_at).toLocaleDateString('lt-LT')}</small>
-                        ${imageHtml}
-                        <div style="line-height:1.8; font-size:1.1rem; color: #333;">
-                            ${article.content.replace(/\n/g, '<br>')}
+                        <div class="blog-content">
+                            <span class="blog-date">📅 ${new Date(article.created_at).toLocaleDateString('lt-LT')}</span>
+                            <h1 style="font-size: 2rem; margin-bottom: 1rem; color: var(--primary-dark);">${article.title}</h1>
+                            ${imageHtml}
+                            <div style="font-size: 1.1rem; line-height: 1.8; color: #333; white-space: pre-wrap;">${article.content}</div>
                         </div>
                     `;
                 })
                 .catch(err => {
-                    console.error(err);
-                    container.innerHTML = '<p class="error">Įvyko klaida gaunant straipsnį.</p>';
+                    console.error("5. KLAIDA:", err);
+                    container.innerHTML = `<p class="error">Nepavyko užkrauti straipsnio. <br> <small>${err.message}</small></p>`;
                 });
         });
     </script>
